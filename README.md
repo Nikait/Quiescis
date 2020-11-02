@@ -17,11 +17,13 @@
       and windows
 
 ### Config settings
-   - PORT - port of ip (default 4001)
-   - IP    - white ip of server (default 127.0.0.1)
-   - chrome_stealer - 1 (on), also connect sqlite3.h and sqlite3.cpp files to your project in Visual Studio
-   - autorun - 1 (on), add rat to startup
-   - autorun_name - file name at startup (default: "explorer.exe")
+|     option     |                     description                         |
+| -------------- |:--------------------------------------------------------|
+|    autorun     | add rat to startup (1-on, 0-off)                        |
+| chrome_stealer | connect sqlite3.h and sqlite3.cpp files to your project |
+|       IP       | white ip of server (default 127.0.0.1)                  |
+|      PORT      | port of ip (default 4001)                               |
+|  autorun_name  | file name at startup (default: "explorer.exe")          |
 
 
 ### <b>Linux distributions</b>:<br/>
