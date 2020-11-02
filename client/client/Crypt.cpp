@@ -23,12 +23,12 @@ std::string CryptFile(std::string path, int key) {
 
 	try {
 		std::string data = readFile(n_path), delcmd = "del " + n_path, cryptdata;
-		for (unsigned int item = 0; item < data.length(); ++item)
+		for (size_t item = 0; item < data.length(); ++item)
 			cryptdata += data[item] ^ key;
 
 		system(delcmd.c_str());
 		std::ofstream crfile(n_path + ".crypt");
-		for (unsigned int item = 0; item < cryptdata.length(); ++item)
+		for (size_t item = 0; item < cryptdata.length(); ++item)
 			crfile << cryptdata[item];
 
 		crfile.close();

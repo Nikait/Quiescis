@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ctime>
 #include "Menu.h"
+#include "Config.h"
 
 #ifndef  __linux__
 	#include <windows.h>
@@ -100,7 +101,9 @@ void HelpMenu() {
 		<< "| [cryptfile]    - encrypt file      with using XOR |\n"
 		<< "| [cryptdir]     - encrypt directory with using XOR |\n"
 		<< "| [download]     - download file                    |\n"
-		<< "| [chrome_st]    - chrome history stealer           |\n"
+#if chrome_stealer
+		<< "| [chrome_st]    - chrome stealer                   |\n"
+#endif // chrome_stealer
 		<< "-----------------------------------------------------\n";
 #ifndef __linux__
 	SetConsoleTextAttribute(hConsole, 10);
@@ -113,10 +116,11 @@ void HelpMenu() {
 	std::cout
 		<< "-----------------------------------------------------\n"
 		<< "| [shutdown]     - shuting down                     |\n"
-		<< "| [error]        - print error                      |\n"
+		<< "| [error]        - print error (english only)       |\n"
 		<< "-----------------------------------------------------\n" << std::endl;
 }
 
+// print timer in format: [hh:mm:ss]
 void timenow() {
 	char time_buf[80];
 	time_t seconds = time(NULL);
@@ -124,11 +128,15 @@ void timenow() {
 	const char* format = "%H:%M:%S";
 	strftime(time_buf, 80, format, timeinfo);
 #ifndef __linux__
+	std::cout << "[";
 	SetConsoleTextAttribute(hConsole, 10);
 	std::cout << time_buf;
 	SetConsoleTextAttribute(hConsole, 7);
+	std::cout << "]";
 #else
+	std::cout << "[";
 	std::cout << time_buf;
+	std::cout << "]";
 #endif
 }
 

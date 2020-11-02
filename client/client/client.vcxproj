@@ -146,7 +146,6 @@
     <ClCompile Include="Keylogger.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Socket.cpp" />
-    <ClCompile Include="sqlite3.c" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -157,7 +156,6 @@
     <ClInclude Include="Info.h" />
     <ClInclude Include="Keylogger.h" />
     <ClInclude Include="Socket.h" />
-    <ClInclude Include="sqlite3.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
