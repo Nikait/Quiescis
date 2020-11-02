@@ -3,7 +3,8 @@
 <b>Quescis</b> is a powerful Remote Access Trojan for windows computer on C++
 
 ## Update 1.2.6
-     1. Added to chrome_st the information about downloaded files and search requests 
+     1. Added to chrome_st the information about downloaded files and search requests
+     2. Bugs fixed in Server.cpp
 
 ![alt text](img/header.png)
 
