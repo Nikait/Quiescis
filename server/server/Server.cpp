@@ -41,7 +41,22 @@ std::string path, key;
 std::string temp_file_name;
 
 enum commands {
-	HELP = 1, CLOSE, PWD, LS, RM, RMDIR, INFO, PS, KILL, KEYLOGGER, CRYPTFILE, CRYPTDIR, DOWNLOAD, SHUTDOWN, ERR, CHROME_ST
+	HELP = 1,
+	CLOSE,
+	PWD,
+	LS,
+	RM,
+	RMDIR,
+	INFO,
+	PS,
+	KILL,
+	KEYLOGGER,
+	CRYPTFILE,
+	CRYPTDIR,
+	DOWNLOAD,
+	SHUTDOWN,
+	ERR,
+	CHROME_ST
 };
 
 int main() {
