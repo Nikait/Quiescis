@@ -1,5 +1,5 @@
 /*
- * Quiescis Remote Access Trojan 1.3.0
+ * Quiescis Remote Access Trojan 1.3.1
  * WARNING!
  * This software is the full property of the author
  * Not intended for dumb kids

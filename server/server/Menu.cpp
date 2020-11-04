@@ -31,34 +31,37 @@ void PrintGreeting() {
 		<< "   ###     ###   ####### ##    ##    ####    # # #### #   ###     #    ##    # #### #     \n"
 		<< "    ####### ##    #####   ##   ### #  #######     ####     #######     ### #    ####      \n"
 		<< "      ###   ##                  ###    #####                #####       ###               \n"
-		<< "            ##  ";
+		<< "            ##                                                                            \n";
 #ifndef __linux__
-	SetConsoleTextAttribute(hConsole, 13);
-	std::cout << "                                   -------------------------------------- \n";
 	SetConsoleTextAttribute(hConsole, 10);
 	std::cout << "            #";
 	SetConsoleTextAttribute(hConsole, 13);
-	std::cout << "                                      |  Quiescis Rat                      | \n";
+	std::cout << "                                         Quiescis RAT ";
+	SetConsoleTextAttribute(hConsole, 7);
+	std::cout << "1.3.1 ";
+	SetConsoleTextAttribute(hConsole, 13);
+	std::cout << "by Nikait               \n";
 	SetConsoleTextAttribute(hConsole, 10);
 	std::cout << "           *";
+	
+	
+	std::cout << "                                          github:";
 	SetConsoleTextAttribute(hConsole, 13);
-	std::cout << "                                       |  development by Nikait             | \n";
+	std::cout << "  https://github.com/Nikait   \n";
 	SetConsoleTextAttribute(hConsole, 10);
 	std::cout << "          *";
+	std::cout << "                                           twitter:";
 	SetConsoleTextAttribute(hConsole, 13);
-	std::cout << "                                        |  github: https://github.com/Nikait | \n"
-		<< "                                                   -------------------------------------- \n" << std::endl;
+	std::cout << " @aaanikit\n\n";
 	SetConsoleTextAttribute(hConsole, 7);
 #else
-	std::cout << purpure
-		<< "                                   -------------------------------------- \n"
-		<< green
-		<< "            #" << purpure << "                                      |  Quiescis Rat                      | \n"
-		<< green
-		<< "           *" << purpure << "                                       |  development by Nikait             | \n"
-		<< green
-		<< "          *" << purpure << "                                        |  github: https://github.com/Nikait | \n"
-		<< "                                                   -------------------------------------- \n" << st_end << std::endl;
+	std::cout << green << "            #" << purpure;
+	std::cout << "                                         Quiescis RAT " << st_end;
+	std::cout << "1.3.1" << purpure << " by Nikait               \n";
+	std::cout << green << "           *" << "                                          github:";
+	std::cout << purpure << "  https://github.com/Nikait   \n" << green;
+	std::cout << "          *                                           twitter:";
+	std::cout << purpure << " @aaanikit\n" << st_end << std::endl;
 	
 #endif
 }
@@ -78,13 +81,15 @@ void HelpMenu() {
 	std::cout << green << "\nbase:\n" << st_end;
 #endif
 	std::cout
-		<< "-----------------------------------------------------\n"
-		<< "| [close]        - close connection                 |\n"
-		<< "| [pwd]          - path                             |\n"
-		<< "| [ls]           - list files and dirs              |\n"
-		<< "| [rm] [rmdir]   - delete file; delete directory    |\n"
-		<< "| [info]         - information (os, cpu, gpu, ram)  |\n"
-		<< "-----------------------------------------------------\n";
+		<< "--------------------------------------------------------\n"
+		<< "|1 | [help]         - print help menu                  |\n"
+		<< "|2 | [close]        - close connection                 |\n"
+		<< "|3 | [pwd]          - path                             |\n"
+		<< "|4 | [ls]           - list files and dirs              |\n"
+		<< "|5 | [rm]           - delete file                      |\n"
+		<< "|6 | [rmdir]        - delete directory                 |\n"
+		<< "|7 | [info]         - information (os, cpu, gpu, etc)  |\n"
+		<< "--------------------------------------------------------\n";
 #ifndef __linux__
 	SetConsoleTextAttribute(hConsole, 10);
 	std::cout << "\nadvanced:\n";
@@ -94,17 +99,17 @@ void HelpMenu() {
 #endif
 
 	std::cout
-		<< "-----------------------------------------------------\n"
-		<< "| [ps]           - process info                     |\n"
-		<< "| [kill]         - kill process                     |\n"
-		<< "| [keylogger]    - start keylogger                  |\n"
-		<< "| [cryptfile]    - encrypt file      with using XOR |\n"
-		<< "| [cryptdir]     - encrypt directory with using XOR |\n"
-		<< "| [download]     - download file                    |\n"
+		<< "--------------------------------------------------------\n"
+		<< "|8 | [ps]           - process info                     |\n"
+		<< "|9 | [kill]         - kill process                     |\n"
+		<< "|10| [keylogger]    - start keylogger                  |\n"
+		<< "|11| [cryptfile]    - encrypt file      with using XOR |\n"
+		<< "|12| [cryptdir]     - encrypt directory with using XOR |\n"
+		<< "|13| [download]     - download file                    |\n"
 #if chrome_stealer
-		<< "| [chrome_st]    - chrome stealer                   |\n"
+		<< "|16| [chrome_st]    - chrome stealer                   |\n"
 #endif // chrome_stealer
-		<< "-----------------------------------------------------\n";
+		<< "-------------------------------------------------------\n";
 #ifndef __linux__
 	SetConsoleTextAttribute(hConsole, 10);
 	std::cout << "\ntrolling:\n";
@@ -114,10 +119,10 @@ void HelpMenu() {
 #endif
 
 	std::cout
-		<< "-----------------------------------------------------\n"
-		<< "| [shutdown]     - shuting down                     |\n"
-		<< "| [error]        - print error (english only)       |\n"
-		<< "-----------------------------------------------------\n" << std::endl;
+		<< "--------------------------------------------------------\n"
+		<< "|14| [shutdown]     - shuting down                     |\n"
+		<< "|15| [error]        - print error (english only)       |\n"
+		<< "--------------------------------------------------------\n" << std::endl;
 }
 
 // print timer in format: [hh:mm:ss]
@@ -134,9 +139,7 @@ void timenow() {
 	SetConsoleTextAttribute(hConsole, 7);
 	std::cout << "]";
 #else
-	std::cout << "[";
-	std::cout << time_buf;
-	std::cout << "]";
+	std::cout << "[" << green << time_buf << st_end << "]";
 #endif
 }
 
