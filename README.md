@@ -47,7 +47,7 @@
 |       IP       | white ip of server (default 127.0.0.1)                  |
 |      PORT      | port of ip (default 4001)                               |
 |  autorun_name  | file name at startup (default: "explorer.exe")          |
-|      lang      | lqnguage the victime machine (optional) (default: "ru") |
+|      lang      | language the victime machine (optional) (default: "ru") |
 
     - Open in Visual Studio client/client.sln
     - Set the Config.h
