@@ -1,7 +1,0 @@
-﻿  Server.cpp
-D:\Users\Администратор\Desktop\c++\Quiescis\server\server\Server.cpp(68,11): warning C4551: function call missing argument list
-D:\Users\Администратор\Desktop\c++\Quiescis\server\server\Server.cpp(199,49): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-D:\Users\Администратор\Desktop\c++\Quiescis\server\server\Server.cpp(213,49): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  Utils.cpp
-  Generating Code...
-  server.vcxproj -> D:\Users\Администратор\Desktop\c++\Quiescis\server\x64\Debug\server.exe
