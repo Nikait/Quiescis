@@ -48,7 +48,7 @@ int parse(std::string comm) {
 	else if (comm == "info")      return 7;
 	else if (comm == "ps")        return 8;
 	else if (comm == "kill")      return 9;
-	else if (comm == "keylogger") return 10;
+	else if (comm == "keydump")   return 10;
 	else if (comm == "cryptfile") return 11;
 	else if (comm == "cryptdir")  return 12;
 	else if (comm == "download")  return 13;

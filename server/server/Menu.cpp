@@ -38,7 +38,7 @@ void PrintGreeting() {
 	SetConsoleTextAttribute(hConsole, 13);
 	std::cout << "                                         Quiescis RAT ";
 	SetConsoleTextAttribute(hConsole, 7);
-	std::cout << "1.3.1 ";
+	std::cout << "1.3.2 ";
 	SetConsoleTextAttribute(hConsole, 13);
 	std::cout << "by Nikait               \n";
 	SetConsoleTextAttribute(hConsole, 10);
@@ -57,7 +57,7 @@ void PrintGreeting() {
 #else
 	std::cout << green << "            #" << purpure;
 	std::cout << "                                         Quiescis RAT " << st_end;
-	std::cout << "1.3.1" << purpure << " by Nikait               \n";
+	std::cout << "1.3.2" << purpure << " by Nikait               \n";
 	std::cout << green << "           *" << "                                          github:";
 	std::cout << purpure << "  https://github.com/Nikait   \n" << green;
 	std::cout << "          *                                           twitter:";
@@ -102,7 +102,7 @@ void HelpMenu() {
 		<< "--------------------------------------------------------\n"
 		<< "|8 | [ps]           - process info                     |\n"
 		<< "|9 | [kill]         - kill process                     |\n"
-		<< "|10| [keylogger]    - start keylogger                  |\n"
+		<< "|10| [keydump]      - dump logs of keylogger           |\n"
 		<< "|11| [cryptfile]    - encrypt file      with using XOR |\n"
 		<< "|12| [cryptdir]     - encrypt directory with using XOR |\n"
 		<< "|13| [download]     - download file                    |\n"

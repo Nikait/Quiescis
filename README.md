@@ -1,13 +1,12 @@
-# Quiescis 1.3.1
+﻿# Quiescis 1.3.2
 
 <b>Quescis</b> is a powerful Remote Access Trojan for windows computer on C++
 
-## Update 1.3.1
-     1. Improved Config.h
+## Update 1.3.2
+     1. Passive keylogger! (command keydump)
      2. Many improvements and optimizations
-     3. New design
 
-![alt text](img/header.jpg)
+![alt text](img/header.png)
 
 # Installing
 ## Server
@@ -74,10 +73,6 @@
 
 ![alt text](img/kill.png)
 
-- 🖋️ Real time keylogger
-
-![alt text](img/keylogger.png)
-
 - 🔒 Encrypting files and directories
 
 before:
@@ -112,7 +107,7 @@ after:
 |    info     |  system information (cpu, gpu hardware id, os) |
 |     ps      |  process info                                  |
 |    kill     |  kill process                                  |
-|  keylogger  |  start  keylogger (real time)                  |
+|   keydump   |  dump all recorded logs by keylogger           |
 |  cryptfile  |  encrypt file        with using XOR            |
 |  cryptdir   |  encrypt directory   with using XOR            |
 |  download   |  download file                                 |
