@@ -73,6 +73,8 @@
 
 ![alt text](img/kill.png)
 
+- 🔑 Dump all logs by command "keydump"
+
 - 🔒 Encrypting files and directories
 
 before:
